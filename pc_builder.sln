@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lib_repositorios", "lib_rep
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lib_dominio", "lib_dominio\lib_dominio.csproj", "{5BBE6F20-C731-4340-A704-BE61BFCBC7FA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ut_presentacion", "ut_presentacion\ut_presentacion.csproj", "{5E2F6919-D91E-45A6-BD57-11EE1DCE588D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,9 +28,14 @@ Global
 		{5BBE6F20-C731-4340-A704-BE61BFCBC7FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5BBE6F20-C731-4340-A704-BE61BFCBC7FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5BBE6F20-C731-4340-A704-BE61BFCBC7FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E2F6919-D91E-45A6-BD57-11EE1DCE588D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E2F6919-D91E-45A6-BD57-11EE1DCE588D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E2F6919-D91E-45A6-BD57-11EE1DCE588D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E2F6919-D91E-45A6-BD57-11EE1DCE588D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{8B0EA3AC-CA11-4352-B43F-7B6263A5548E} = {4A84BA75-65FA-4AB6-B565-0BF88960E992}
 		{5BBE6F20-C731-4340-A704-BE61BFCBC7FA} = {B233279D-A25C-4FA6-B770-BA660663FD46}
+		{5E2F6919-D91E-45A6-BD57-11EE1DCE588D} = {5C383338-68FB-43EE-9975-E7651EA3382C}
 	EndGlobalSection
 EndGlobal
