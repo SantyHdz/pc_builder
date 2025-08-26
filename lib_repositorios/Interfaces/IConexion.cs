@@ -7,10 +7,11 @@ public interface IConexion
 {
     string? StringConexion { get; set; }
 
-    DbSet<BuildComponentes>? BuildComponentes { get; set; }
+    DbSet<ComponentesEnBuild>? ComponentesEnBuild { get; set; }
     DbSet<Builds>? Builds { get; set; }
-    DbSet<Categorias>? Categorias { get; set; }
+    DbSet<Compatibilidad>? Compatibilidad { get; set; }
     DbSet<Componentes>? Componentes { get; set; }
+    DbSet<TiposComponentes>? TiposComponentes { get; set; }
     DbSet<Auditoria>? Auditorias { get; set; }
     DbSet<Roles>? Roles { get; set; }
     DbSet<Usuarios>? Usuarios { get; set; }

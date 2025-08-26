@@ -6,36 +6,26 @@ namespace ut_presentacion.Nucleo;
 public class EntidadesNucleo
 {
 
-    public static Categorias? Categorias()
+    public static TiposComponentes? TiposComponentes()
     {
-        var entidad = new Categorias();
-        entidad.Nombre = "Disco Duro";
+        TiposComponentes? entidad = new TiposComponentes();
+        entidad.Nombre = "Unit Test Tipo Componente";
         return entidad;
     }
-    public static Componentes? Componentes(Categorias? categorias)
+    
+    public static Componentes? Componentes(TiposComponentes? tipoComponente)
     {
-        var entidad = new Componentes();
-        entidad.Nombre = "Disco Duro 1TB";
-        entidad.Marca = "Disco Duro 1TB";
-        entidad.Precio = 150.00M;
-        entidad.IdCategoria = categorias.IdCategoria;
-        entidad.Especificaciones = "Disco duro de 1TB, 7200RPM, SATA III";
-        return entidad;
-    }
-
-    public static Builds? Builds(Usuarios? usuarios)
-    {
-        var entidad = new Builds();
-        entidad.Nombre = "Build Gamer";
-        entidad.IdUsuario = usuarios.Id;
-        entidad.FechaCreacion = new DateTime(2022, 5, 20);
-        return entidad;
-    }
-    public static BuildComponentes? BuildComponentes(Builds? builds, Componentes? componentes)
-    {
-        var entidad = new BuildComponentes();
-        entidad.IdBuild = builds.IdBuild;
-        entidad.IdComponente = componentes.IdComponente;
+        Componentes? entidad = new Componentes();
+        entidad.Nombre = "Unit Test Componente";
+        entidad.Tipo = tipoComponente.Id;
+        entidad.Marca = "Unit Test Marca";
+        entidad.Precio = 100.00m;
+        entidad.ConsumoEnergetico = 5;
+        entidad.Especificaciones = "Unit Test Especificaciones";
+        entidad.Imagen = "Unit Test Imagen";
+        entidad.Socket = "Unit Test Socket";
+        entidad.TipoRAM = "Unit Test Tipo RAM";
+        entidad.Formato = "Unit Test Formato";
         return entidad;
     }
 }

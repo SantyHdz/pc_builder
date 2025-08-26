@@ -40,108 +40,134 @@ public class ConexionEF3
             conexion.SaveChanges();
         }
     }*/
+        
+        public partial class Conexion : DbContext, IConexion
+{
+    public string? StringConexion { get; set; }
 
-    public partial class Conexion : DbContext, IConexion
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        public string? StringConexion { get; set; }
+        optionsBuilder.UseSqlServer(this.StringConexion!, p => { });
+        optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+    }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        // Configuración de la relación de compatibilidad
+        modelBuilder.Entity<Compatibilidad>()
+            .HasKey(c => new { c.ComponenteId, c.ComponenteCompatibleId });
+
+        modelBuilder.Entity<Compatibilidad>()
+            .HasOne(c => c.Componente)
+            .WithMany(c => c.Compatibilidades)
+            .HasForeignKey(c => c.ComponenteId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Compatibilidad>()
+            .HasOne(c => c.ComponenteCompatible)
+            .WithMany()
+            .HasForeignKey(c => c.ComponenteCompatibleId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        // Configuración de la relación entre Componentes y TiposComponentes
+        modelBuilder.Entity<Componentes>()
+            .HasOne(c => c.TipoComponente)
+            .WithMany()
+            .HasForeignKey(c => c.Tipo)
+            .OnDelete(DeleteBehavior.Restrict);
+    }
+
+    public DbSet<ComponentesEnBuild>? ComponentesEnBuild { get; set; }
+    public DbSet<Builds>? Builds { get; set; }
+    public DbSet<Compatibilidad>? Compatibilidad { get; set; }
+    public DbSet<Componentes>? Componentes { get; set; }
+    public DbSet<TiposComponentes>? TiposComponentes { get; set; }
+    public DbSet<Auditoria>? Auditorias { get; set; }
+    public DbSet<Roles>? Roles { get; set; }
+    public DbSet<Usuarios>? Usuarios { get; set; }
+
+    public override int SaveChanges()
+    {
+        RegistrarCambiosAuditables();
+        return base.SaveChanges();
+    }
+
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        RegistrarCambiosAuditables();
+        return await base.SaveChangesAsync(cancellationToken);
+    }
+
+    private void RegistrarCambiosAuditables()
+    {
+        var entradas = ChangeTracker.Entries()
+            .Where(e => e.State == EntityState.Added 
+                        || e.State == EntityState.Modified 
+                        || e.State == EntityState.Deleted)
+            .ToList();  // Materializar la lista primero
+
+        foreach (var entry in entradas)
         {
-            optionsBuilder.UseSqlServer(this.StringConexion!, p => { });
-            optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-        }
-
-        public DbSet<BuildComponentes>? BuildComponentes { get; set; }
-        public DbSet<Builds>? Builds { get; set; }
-        public DbSet<Categorias>? Categorias { get; set; }
-        public DbSet<Componentes>? Componentes { get; set; }
-        public DbSet<Auditoria>? Auditorias { get; set; }
-        public DbSet<Roles>? Roles { get; set; }
-        public DbSet<Usuarios>? Usuarios { get; set; }
-
-        public override int SaveChanges()
-        {
-            RegistrarCambiosAuditables();
-            return base.SaveChanges();
-        }
-
-        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            RegistrarCambiosAuditables();
-            return await base.SaveChangesAsync(cancellationToken);
-        }
-
-        private void RegistrarCambiosAuditables()
-        {
-            var entradas = ChangeTracker.Entries()
-                .Where(e => e.State == EntityState.Added 
-                            || e.State == EntityState.Modified 
-                            || e.State == EntityState.Deleted)
-                .ToList();  // Materializar la lista primero
-
-            foreach (var entry in entradas)
+            var auditoria = new Auditoria
             {
-                var auditoria = new Auditoria
-                {
-                    Tabla = entry.Metadata.GetTableName() ?? entry.Entity.GetType().Name,
-                    Accion = entry.State.ToString(),
-                    Fecha = DateTime.UtcNow,
-                    Usuario = ObtenerUsuarioActual(),
-                    LlavePrimaria = ObtenerLlavePrimaria(entry),
-                    Cambios = ObtenerCambios(entry)
-                };
+                Tabla = entry.Metadata.GetTableName() ?? entry.Entity.GetType().Name,
+                Accion = entry.State.ToString(),
+                Fecha = DateTime.UtcNow,
+                Usuario = ObtenerUsuarioActual(),
+                LlavePrimaria = ObtenerLlavePrimaria(entry),
+                Cambios = ObtenerCambios(entry)
+            };
 
-                Auditorias.Add(auditoria);
-            }
-        }
-
-        private string ObtenerLlavePrimaria(Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry entry)
-        {
-            if (entry.State == EntityState.Added)
-            {
-                return "N/A";
-            }
-            var llave = entry.Properties.FirstOrDefault(p => p.Metadata.IsPrimaryKey());
-            return llave?.CurrentValue?.ToString() ?? "";
-        }
-
-
-        private string ObtenerCambios(Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry entry)
-        {
-            var cambios = new List<string>();
-
-            if(entry.State == EntityState.Added)
-            {
-                foreach(var prop in entry.Properties)
-                {
-                    cambios.Add($"{prop.Metadata.Name} = {prop.CurrentValue}");
-                }
-            }
-            else if (entry.State == EntityState.Deleted)
-            {
-                foreach(var prop in entry.Properties)
-                {
-                    cambios.Add($"{prop.Metadata.Name} (original) = {prop .OriginalValue}");
-                }
-            }
-            else if (entry.State == EntityState.Modified)
-            {
-                foreach (var prop in entry.Properties)
-                {
-                    if (prop.IsModified)
-                    {
-                        cambios.Add($"{prop.Metadata.Name}: {prop.OriginalValue} => {prop.CurrentValue}");
-                    }
-                }
-            }
-
-            return string.Join("; ", cambios);
-        }
-
-        public string ObtenerUsuarioActual()
-        {
-            // Implementa la lógica para obtener el usuario actual si es necesario
-            return "usuario-sistema"; // Ejemplo placeholder
+            Auditorias.Add(auditoria);
         }
     }
+
+    private string ObtenerLlavePrimaria(Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry entry)
+    {
+        if (entry.State == EntityState.Added)
+        {
+            return "N/A";
+        }
+        var llave = entry.Properties.FirstOrDefault(p => p.Metadata.IsPrimaryKey());
+        return llave?.CurrentValue?.ToString() ?? "";
+    }
+
+    private string ObtenerCambios(Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry entry)
+    {
+        var cambios = new List<string>();
+
+        if(entry.State == EntityState.Added)
+        {
+            foreach(var prop in entry.Properties)
+            {
+                cambios.Add($"{prop.Metadata.Name} = {prop.CurrentValue}");
+            }
+        }
+        else if (entry.State == EntityState.Deleted)
+        {
+            foreach(var prop in entry.Properties)
+            {
+                cambios.Add($"{prop.Metadata.Name} (original) = {prop.OriginalValue}");
+            }
+        }
+        else if (entry.State == EntityState.Modified)
+        {
+            foreach (var prop in entry.Properties)
+            {
+                if (prop.IsModified)
+                {
+                    cambios.Add($"{prop.Metadata.Name}: {prop.OriginalValue} => {prop.CurrentValue}");
+                }
+            }
+        }
+
+        return string.Join("; ", cambios);
+    }
+
+    public string ObtenerUsuarioActual()
+    {
+        // Implementa la lógica para obtener el usuario actual si es necesario
+        return "usuario-sistema"; // Ejemplo placeholder
+    }
 }
+    }

@@ -6,12 +6,12 @@ using ut_presentacion.Nucleo;
 namespace ut_presentacion.Repositorios;
     
 [TestClass]
-public class CategoriasPruebas
+public class TiposComponentesPruebas
 {
     private readonly IConexion? iConexion;
-    private List<Categorias>? lista;
-    private Categorias? entidad;
-    public CategoriasPruebas()
+    private List<TiposComponentes>? lista;
+    private TiposComponentes? entidad;
+    public TiposComponentesPruebas()
     {
         iConexion = new ConexionEF3.Conexion();
         iConexion.StringConexion = Configuracion.ObtenerValor("StringConexion");
@@ -26,27 +26,27 @@ public class CategoriasPruebas
     }
     public bool Listar()
     {
-        this.lista = this.iConexion!.Categorias!.ToList();
+        this.lista = this.iConexion!.TiposComponentes!.ToList();
         return lista.Count > 0;
     }
     public bool Guardar()
     {
-        this.entidad = EntidadesNucleo.Categorias()!;
-        this.iConexion!.Categorias!.Add(this.entidad);
+        this.entidad = EntidadesNucleo.TiposComponentes()!;
+        this.iConexion!.TiposComponentes!.Add(this.entidad);
         this.iConexion!.SaveChanges();
         return true;
     }
     public bool Modificar()
     {
         this.entidad!.Nombre = "Try unit test"; 
-        var entry = this.iConexion!.Entry<Categorias>(this.entidad);
+        var entry = this.iConexion!.Entry<TiposComponentes>(this.entidad);
         entry.State = EntityState.Modified;
         this.iConexion!.SaveChanges();
         return true;
     }
     public bool Borrar()
     {
-        this.iConexion!.Categorias!.Remove(this.entidad!);
+        this.iConexion!.TiposComponentes!.Remove(this.entidad!);
         this.iConexion!.SaveChanges();
         return true;
     }

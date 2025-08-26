@@ -31,7 +31,7 @@ public class ComponentesPruebas
     }
     public bool Guardar()
     {
-        var categorias = this.iConexion!.Categorias!.FirstOrDefault(x => x.IdCategoria == 1);
+        var categorias = this.iConexion!.TiposComponentes!.FirstOrDefault(x => x.Id == 1);
         this.entidad = EntidadesNucleo.Componentes(categorias)!;
         this.iConexion!.Componentes!.Add(this.entidad);
         this.iConexion!.SaveChanges();

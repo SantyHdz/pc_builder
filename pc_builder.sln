@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lib_dominio", "lib_dominio\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ut_presentacion", "ut_presentacion\ut_presentacion.csproj", "{5E2F6919-D91E-45A6-BD57-11EE1DCE588D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lib_aplicaciones", "lib_aplicaciones\lib_aplicaciones.csproj", "{77E50423-7249-44E7-B425-66F52AFF247F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,10 +34,15 @@ Global
 		{5E2F6919-D91E-45A6-BD57-11EE1DCE588D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E2F6919-D91E-45A6-BD57-11EE1DCE588D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E2F6919-D91E-45A6-BD57-11EE1DCE588D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77E50423-7249-44E7-B425-66F52AFF247F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77E50423-7249-44E7-B425-66F52AFF247F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77E50423-7249-44E7-B425-66F52AFF247F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77E50423-7249-44E7-B425-66F52AFF247F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{8B0EA3AC-CA11-4352-B43F-7B6263A5548E} = {4A84BA75-65FA-4AB6-B565-0BF88960E992}
 		{5BBE6F20-C731-4340-A704-BE61BFCBC7FA} = {B233279D-A25C-4FA6-B770-BA660663FD46}
 		{5E2F6919-D91E-45A6-BD57-11EE1DCE588D} = {5C383338-68FB-43EE-9975-E7651EA3382C}
+		{77E50423-7249-44E7-B425-66F52AFF247F} = {4A84BA75-65FA-4AB6-B565-0BF88960E992}
 	EndGlobalSection
 EndGlobal
