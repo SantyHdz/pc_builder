@@ -10,7 +10,7 @@ public class EntidadesNucleo
     {
         TiposComponentes? entidad = new TiposComponentes();
         entidad.Nombre = "Unit Test Tipo Componente";
-        return entidad;
+        return entidad;     
     }
     
     public static Componentes? Componentes(TiposComponentes? tipoComponente)
@@ -28,4 +28,31 @@ public class EntidadesNucleo
         entidad.Formato = "Unit Test Formato";
         return entidad;
     }
+    
+    /*public static Compatibilidad? Compatibilidad(Componentes? componente)
+    {
+        Compatibilidad? entidad = new Compatibilidad();
+        entidad.ComponenteId = componente.Id;
+        entidad.ComponenteCompatibleId = componente.Id;
+        return entidad;
+    }*/
+    
+    public static Builds? Builds(Usuarios? usuario)
+    {
+        Builds? entidad = new Builds();
+        entidad.UsuarioId = usuario.Id;
+        entidad.Nombre = "Unit Test Build";
+        entidad.PrecioTotal = 500.00m;
+        entidad.ConsumoEnergeticoTotal = 300;
+        entidad.FechaCreacion = DateTime.Now;
+        return entidad;
+    }
+    public static ComponentesEnBuild? ComponentesEnBuild(Builds? build, Componentes? componente)
+    {
+        ComponentesEnBuild? entidad = new ComponentesEnBuild();
+        entidad.BuildId = build.Id;
+        entidad.ComponenteId = componente.Id;
+        return entidad; 
+    }
+    
 }
