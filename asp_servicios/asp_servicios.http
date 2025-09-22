@@ -1,0 +1,6 @@
+@asp_servicios_HostAddress = http://localhost:5197
+
+GET {{asp_servicios_HostAddress}}/
+Accept: application/json
+
+###

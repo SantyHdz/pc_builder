@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Paleta Hibox-like */
+:root {
+  --hibox-dark: #2b2f33;
+  --hibox-darker: #222529;
+  --hibox-accent: #18c37b;
+  --hibox-cta: #ff5c8a;
+}
+
+/* ejemplo de clases util */
+.bg-hibox { background-color: var(--hibox-darker); }
+.text-hibox-accent { color: var(--hibox-accent); }
+.btn-hibox { background-color: var(--hibox-accent); color: white; padding: .5rem 1rem; border-radius: .5rem;}
+.card { @apply bg-white/5 p-4 rounded-2xl shadow-lg; }
