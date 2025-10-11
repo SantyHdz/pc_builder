@@ -1,4 +1,5 @@
-﻿using lib_dominio.Entidades;
+﻿using lib_dominio.DTOs;
+using lib_dominio.Entidades;
 
 namespace lib_aplicaciones.Interfaces
 {
@@ -11,5 +12,6 @@ namespace lib_aplicaciones.Interfaces
         Componentes? Borrar(Componentes? entidad);
         List<Componentes> FiltrarPorTipo(int tipo);
         List<Componentes> ObtenerCompatibles(int componenteId);
+        Task<IEnumerable<Componentes>> BuscarConFiltrosAsync(FiltroComponenteDto filtro);
     }
 }

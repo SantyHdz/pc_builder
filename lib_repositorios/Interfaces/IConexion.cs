@@ -17,4 +17,5 @@ public interface IConexion
     DbSet<Usuarios>? Usuarios { get; set; }
     EntityEntry<T> Entry<T>(T entity) where T : class;
     int SaveChanges();
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

@@ -1,4 +1,5 @@
 ﻿using lib_aplicaciones.Interfaces;
+using lib_dominio.DTOs;
 using lib_dominio.Entidades;
 using lib_repositorios.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -65,6 +66,23 @@ namespace lib_aplicaciones.Implementaciones
                 .ToList();
 
             return this.IConexion.Componentes!.Where(c => compatibles.Contains(c.Id)).ToList();
+        }
+        
+        public async Task<IEnumerable<Componentes>> BuscarConFiltrosAsync(FiltroComponenteDto filtro)
+        {
+            var query = this.IConexion!.Componentes!.AsQueryable();
+
+            if (!string.IsNullOrEmpty(filtro.Marca))
+                query = query.Where(c => c.Marca.Contains(filtro.Marca));
+            if (filtro.PrecioMin.HasValue)
+                query = query.Where(c => c.Precio >= filtro.PrecioMin.Value);
+            if (filtro.PrecioMax.HasValue)
+                query = query.Where(c => c.Precio <= filtro.PrecioMax.Value);
+            if (!string.IsNullOrEmpty(filtro.Tipo))
+                query = query.Where(c => c.TipoComponente.Nombre == filtro.Tipo);
+            if (!string.IsNullOrEmpty(filtro.Caracteristica))
+                query = query.Where(c => EF.Functions.Like(c.Especificaciones, $"%{filtro.Caracteristica}%")); // Asume campo Especificaciones en Componente
+            return await query.ToListAsync(); // RNF-01: Query LINQ eficiente para <2s
         }
     }
 }
