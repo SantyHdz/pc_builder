@@ -60,14 +60,24 @@ namespace lib_aplicaciones.Implementaciones
 
         public List<Componentes> ObtenerCompatibles(int componenteId)
         {
-            var compatibles = this.IConexion!.Compatibilidad!
+            // Buscar compatibilidad en AMBAS direcciones
+            var compatiblesDirectos = this.IConexion!.Compatibilidad!
                 .Where(c => c.ComponenteId == componenteId)
                 .Select(c => c.ComponenteCompatibleId)
                 .ToList();
 
-            return this.IConexion.Componentes!.Where(c => compatibles.Contains(c.Id)).ToList();
+            var compatiblesInversos = this.IConexion!.Compatibilidad!
+                .Where(c => c.ComponenteCompatibleId == componenteId)
+                .Select(c => c.ComponenteId)
+                .ToList();
+
+            // Unir ambas listas
+            var todosCompatibles = compatiblesDirectos.Union(compatiblesInversos).ToList();
+
+            return this.IConexion.Componentes!
+                .Where(c => todosCompatibles.Contains(c.Id))
+                .ToList();
         }
-        
         public async Task<IEnumerable<Componentes>> BuscarConFiltrosAsync(FiltroComponenteDto filtro)
         {
             var query = this.IConexion!.Componentes!.AsQueryable();

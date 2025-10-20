@@ -82,9 +82,11 @@ namespace asp_servicios.Controllers
             }
             catch (Exception ex)
             {
-                respuesta["Error"] = ex.Message.ToString();
+                var inner = ex.InnerException?.Message ?? "(sin inner exception)";
+                respuesta["Error"] = $"{ex.Message} | Inner: {inner}";
                 return JsonConversor.ConvertirAString(respuesta);
             }
+
         }
 
         [HttpPost]
@@ -144,9 +146,11 @@ namespace asp_servicios.Controllers
             }
             catch (Exception ex)
             {
-                respuesta["Error"] = ex.Message.ToString();
+                var inner = ex.InnerException?.Message ?? "(sin inner exception)";
+                respuesta["Error"] = $"{ex.Message} | Inner: {inner}";
                 return JsonConversor.ConvertirAString(respuesta);
             }
+
         }
 
         [HttpPost]

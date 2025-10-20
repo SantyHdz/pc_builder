@@ -87,3 +87,17 @@ C:\Users\santi\RiderProjects\pc_builder\asp_servicios\bin\Debug\net8.0\lib_domin
 C:\Users\santi\RiderProjects\pc_builder\asp_servicios\bin\Debug\net8.0\lib_repositorios.pdb
 C:\Users\santi\RiderProjects\pc_builder\asp_servicios\obj\Debug\net8.0\asp_servicios.csproj.AssemblyReference.cache
 C:\Users\santi\RiderProjects\pc_builder\asp_servicios\obj\Debug\net8.0\asp_serv.1BB33DF7.Up2Date
+C:\Users\santi\RiderProjects\pc_builder\asp_servicios\bin\Debug\net8.0\itext.barcodes.dll
+C:\Users\santi\RiderProjects\pc_builder\asp_servicios\bin\Debug\net8.0\itext.bouncy-castle-connector.dll
+C:\Users\santi\RiderProjects\pc_builder\asp_servicios\bin\Debug\net8.0\itext.forms.dll
+C:\Users\santi\RiderProjects\pc_builder\asp_servicios\bin\Debug\net8.0\itext.io.dll
+C:\Users\santi\RiderProjects\pc_builder\asp_servicios\bin\Debug\net8.0\itext.kernel.dll
+C:\Users\santi\RiderProjects\pc_builder\asp_servicios\bin\Debug\net8.0\itext.layout.dll
+C:\Users\santi\RiderProjects\pc_builder\asp_servicios\bin\Debug\net8.0\itext.pdfa.dll
+C:\Users\santi\RiderProjects\pc_builder\asp_servicios\bin\Debug\net8.0\itext.pdfua.dll
+C:\Users\santi\RiderProjects\pc_builder\asp_servicios\bin\Debug\net8.0\itext.sign.dll
+C:\Users\santi\RiderProjects\pc_builder\asp_servicios\bin\Debug\net8.0\itext.styledxmlparser.dll
+C:\Users\santi\RiderProjects\pc_builder\asp_servicios\bin\Debug\net8.0\itext.svg.dll
+C:\Users\santi\RiderProjects\pc_builder\asp_servicios\bin\Debug\net8.0\itext.commons.dll
+C:\Users\santi\RiderProjects\pc_builder\asp_servicios\bin\Debug\net8.0\Microsoft.DotNet.PlatformAbstractions.dll
+C:\Users\santi\RiderProjects\pc_builder\asp_servicios\bin\Debug\net8.0\Microsoft.Extensions.DependencyModel.dll

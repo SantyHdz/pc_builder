@@ -45,8 +45,121 @@
                     }
 
                     this.iAplicacion!.Configurar(Configuracion.ObtenerValor("StringConexion")); 
-                    respuesta["Entidades"] = this.iAplicacion!.Listar();
+                    var usuarios = this.iAplicacion!.Listar();
+                    
+                    foreach (var usuario in usuarios)
+                    {
+                        usuario.ContrasenaHash = null;
+                    }
 
+                    respuesta["Entidades"] = usuarios;
+                    respuesta["Respuesta"] = "OK";
+                    respuesta["Fecha"] = DateTime.Now.ToString();
+                    return JsonConversor.ConvertirAString(respuesta);
+                }
+                catch (Exception ex)
+                {
+                    respuesta["Error"] = ex.Message.ToString();
+                    return JsonConversor.ConvertirAString(respuesta);
+                }
+            }
+            
+            [HttpPost]
+            public string Registrar()
+            {
+                var respuesta = new Dictionary<string, object>();
+                try
+                {
+                    var datos = ObtenerDatos();
+        
+                    var entidad = JsonConversor.ConvertirAObjeto<Usuarios>(
+                        JsonConversor.ConvertirAString(datos["Entidad"]));
+
+                    // Validaciones básicas
+                    if (string.IsNullOrEmpty(entidad.Correo))
+                    {
+                        respuesta["Error"] = "El correo es obligatorio";
+                        return JsonConversor.ConvertirAString(respuesta);
+                    }
+
+                    if (string.IsNullOrEmpty(entidad.ContrasenaHash))
+                    {
+                        respuesta["Error"] = "La contraseña es obligatoria";
+                        return JsonConversor.ConvertirAString(respuesta);
+                    }
+
+                    // Verificar si el correo ya existe
+                    this.iAplicacion!.Configurar(Configuracion.ObtenerValor("StringConexion"));
+                    var usuarioExistente = this.iAplicacion!.PorCorreo(entidad);
+        
+                    if (usuarioExistente != null && usuarioExistente.Count > 0)
+                    {
+                        respuesta["Error"] = "El correo ya está registrado";
+                        return JsonConversor.ConvertirAString(respuesta);
+                    }
+                    
+                    entidad.ContrasenaHash = HashUtil.ComputeSha256Hash(entidad.ContrasenaHash);
+
+                    
+                    entidad = this.iAplicacion!.Guardar(entidad);
+
+                    
+                    entidad.ContrasenaHash = null;
+
+                    respuesta["Entidad"] = entidad!;
+                    respuesta["Respuesta"] = "OK";
+                    respuesta["Fecha"] = DateTime.Now.ToString();
+                    return JsonConversor.ConvertirAString(respuesta);
+                }
+                catch (Exception ex)
+                {
+                    respuesta["Error"] = ex.Message.ToString();
+                    return JsonConversor.ConvertirAString(respuesta);
+                }
+            }
+            
+            [HttpPost]
+            public string Login()
+            {
+                var respuesta = new Dictionary<string, object>();
+                try
+                {
+                    var datos = ObtenerDatos();
+        
+                    var correo = datos.ContainsKey("Correo") ? datos["Correo"].ToString() : "";
+                    var contrasena = datos.ContainsKey("Contrasena") ? datos["Contrasena"].ToString() : "";
+
+                    if (string.IsNullOrEmpty(correo) || string.IsNullOrEmpty(contrasena))
+                    {
+                        respuesta["Error"] = "Correo y contraseña son obligatorios";
+                        return JsonConversor.ConvertirAString(respuesta);
+                    }
+
+                    
+                    var contrasenaHash = HashUtil.ComputeSha256Hash(contrasena);
+
+                    this.iAplicacion!.Configurar(Configuracion.ObtenerValor("StringConexion"));
+                    var usuarios = this.iAplicacion!.PorCorreo(new Usuarios { Correo = correo });
+
+                    if (usuarios == null || usuarios.Count == 0)
+                    {
+                        respuesta["Error"] = "Usuario no encontrado";
+                        return JsonConversor.ConvertirAString(respuesta);
+                    }
+
+                    var usuario = usuarios[0];
+
+                    
+                    if (usuario.ContrasenaHash != contrasenaHash)
+                    {
+                        respuesta["Error"] = "Contraseña incorrecta";
+                        return JsonConversor.ConvertirAString(respuesta);
+                    }
+                    
+                    
+                    usuario.ContrasenaHash = null;
+
+                    respuesta["Entidad"] = usuario;
                     respuesta["Respuesta"] = "OK";
                     respuesta["Fecha"] = DateTime.Now.ToString();
                     return JsonConversor.ConvertirAString(respuesta);
@@ -75,13 +188,19 @@
                         JsonConversor.ConvertirAString(datos["Entidad"]));
 
                     this.iAplicacion!.Configurar(Configuracion.ObtenerValor("StringConexion")); 
-                    respuesta["Entidades"] = this.iAplicacion!.PorCorreo(entidad);
+                    var usuarios = this.iAplicacion!.PorCorreo(entidad);
+
+                    
+                    foreach (var usuario in usuarios)
+                    {
+                        usuario.ContrasenaHash = null;
+                    }
+
+                    respuesta["Entidades"] = usuarios;
                     respuesta["Respuesta"] = "OK";
                     respuesta["Fecha"] = DateTime.Now.ToString();
                     return JsonConversor.ConvertirAString(respuesta);
                 }
-
-
                 catch (Exception ex)
                 {
                     respuesta["Error"] = ex.Message.ToString();
@@ -151,6 +270,63 @@
                     return JsonConversor.ConvertirAString(respuesta);
                 }
             }
+            
+            [HttpPost]
+public string RecuperarContrasena()
+{
+    var respuesta = new Dictionary<string, object>();
+    try
+    {
+        
+        var datos = ObtenerDatos();
+        var correo = datos.ContainsKey("Correo") ? datos["Correo"].ToString() : "";
+        var nuevaContrasena = datos.ContainsKey("NuevaContrasena") ? datos["NuevaContrasena"].ToString() : "";
+
+        
+        if (string.IsNullOrEmpty(correo) || string.IsNullOrEmpty(nuevaContrasena))
+        {
+            respuesta["Error"] = "Correo y nueva contraseña son obligatorios";
+            return JsonConversor.ConvertirAString(respuesta);
+        }
+
+        
+        if (nuevaContrasena.Length < 6)
+        {
+            respuesta["Error"] = "La contraseña debe tener al menos 6 caracteres";
+            return JsonConversor.ConvertirAString(respuesta);
+        }
+
+        
+        this.iAplicacion!.Configurar(Configuracion.ObtenerValor("StringConexion"));
+        var usuarios = this.iAplicacion!.PorCorreo(new Usuarios { Correo = correo });
+
+        if (usuarios == null || usuarios.Count == 0)
+        {
+            respuesta["Error"] = "No se encontró un usuario con ese correo";
+            return JsonConversor.ConvertirAString(respuesta);
+        }
+
+        
+        var usuario = usuarios[0];
+        usuario.ContrasenaHash = HashUtil.ComputeSha256Hash(nuevaContrasena);
+
+        usuario = this.iAplicacion!.Modificar(usuario);
+
+        
+        usuario.ContrasenaHash = null;
+
+        respuesta["Entidad"] = usuario;
+        respuesta["Respuesta"] = "OK";
+        respuesta["Fecha"] = DateTime.Now.ToString();
+        return JsonConversor.ConvertirAString(respuesta);
+    }
+    catch (Exception ex)
+    {
+        respuesta["Error"] = ex.Message.ToString();
+        return JsonConversor.ConvertirAString(respuesta);
+    }
+}
+
 
             [HttpPost]
             public string Borrar()
