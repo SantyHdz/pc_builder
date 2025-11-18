@@ -50,6 +50,7 @@ namespace lib_dominio.Nucleo
                 }
             }
         }
+        //Commit
 
         public static bool EstaEncriptado(string value)
         {
